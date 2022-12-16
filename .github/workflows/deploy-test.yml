@@ -1,0 +1,23 @@
+name: Deploy Prod
+on:
+  release:
+    types: [released]
+jobs:
+  deploy:
+    # only deploy when tag starts with release/
+    if: startsWith(github.ref, 'refs/tags/release/')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+          extensions: curl, dom, filter, json, libxml, mbstring, mysqli, openssl, pcntl, pcre, pdo, pdo_mysql, phar, redis, reflection, simplexml, soap, spl, tokenizer, xml, xmlwriter, zip, zlib
+          tools: composer:v2
+        env:
+          fail-fast: true
+          update: true
